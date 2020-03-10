@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import axios from 'axios';
 
 
@@ -10,11 +10,77 @@ const simpleCrypto = new SimpleCrypto(_secretKey);
  
 
 class Login extends Component {
-  
+   // API POST LOGIN
+   constructor(props) {
+      super(props);
+
+      
+      this.state = {
+          userName: "",
+          password: "",
+          errorMsg: false,
+      };
+      this.submitHandler = this.submitHandler.bind(this);
+      this.handleChangePassword = this.handleChangePassword.bind(this);
+      this.handleChangeUsername = this.handleChangeUsername.bind(this);
+  }
+  handleChangeUsername = event => {
+    this.setState({
+        userName: event.target.value
+    });
+  }
+
+  handleChangePassword = event => {
+    this.setState({
+        password: event.target.value
+    });
+  }
+
+  serialize = obj => {
+    let str = [];
+    for (let p in obj)
+      if (obj.hasOwnProperty(p)) {
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+      }
+    return str.join("&");
+  };
+
+  submitHandler(e) { 
+      
+      e.preventDefault();      
+      axios('http://localhost:3000/api/auth/login', {
+          method: "POST",
+          proxyHeaders: false,
+          credentials: false,
+          headers: {              
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
+          },
+          data: this.serialize({
+              userName: simpleCrypto.encrypt(this.state.userName),
+              password: simpleCrypto.encrypt(this.state.password),            
+          })
+      }).then(response => {
+          if(response.data.auth){               
+              sessionStorage.setItem("token", response.data.token);                
+              this.props.history.push('/dashboard');                
+          }            
+      }).catch(error => {                         
+          this.setState({
+              errorMsg:true
+          })
+      });
+                  
+  }
+  // END API POST LOGIN 
+
   render() {
     return (
       <div className="app flex-row align-items-center">
         <Container>
+        <Alert color="danger">
+          This is a danger alert — check it out!
+        </Alert>
           <Row className="justify-content-center">
             <Col md="8">
               <CardGroup>
@@ -29,7 +95,12 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" />
+                        <Input 
+                          type="text" 
+                          placeholder="Username" 
+                          autoComplete="username"  
+                          value={this.state.userName}                        
+                          onChange={this.handleChangeUsername}  />
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -37,11 +108,17 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Password" autoComplete="current-password" />
+                        <Input 
+                          type="password" 
+                          placeholder="Password" 
+                          autoComplete="current-password" 
+                          onChange={this.handleChangePassword}                        
+                          value={this.state.password}
+                        />
                       </InputGroup>
                       <Row>
                         <Col xs="6">
-                          <Button color="primary" className="px-4">Login</Button>
+                          <Button color="primary" className="px-4" onClick={this.submitHandler}>Login</Button>
                         </Col>
                         <Col xs="6" className="text-right">
                           <Button color="link" className="px-0">Forgot password?</Button>
