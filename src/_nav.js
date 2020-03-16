@@ -40,8 +40,13 @@ export default {
       },
       {
         name: 'Add Product',
-        url: '/theme/colors',
+        url: '/product',
         icon: 'fa fa-shopping-basket',
+      },
+      {
+        name: 'View Product',
+        url: '/viewProducts',
+        icon: 'fa fa-th',
       },
       {
         name: 'Add Category',

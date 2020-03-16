@@ -23,6 +23,8 @@ const Breadcrumbs = React.lazy(() => import('./views/Base/Breadcrumbs/Breadcrumb
 // const Buttons = React.lazy(() => import('./views/Buttons/Buttons'));
 // const Charts = React.lazy(() => import('./views/Charts'));
 const Dashboard = React.lazy(() => import('./views/Dashboard/Dashboard'));
+const Products = React.lazy(() => import('./views/Pages/Product/Products'));
+const viewProducts = React.lazy(() => import('./views/Pages/Product/viewProducts'));
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
 // const Flags = React.lazy(() => import('./views/Icons/Flags'));
 // const FontAwesome = React.lazy(() => import('./views/Icons/FontAwesome'));
@@ -38,8 +40,10 @@ const Dashboard = React.lazy(() => import('./views/Dashboard/Dashboard'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '/', exact: true, name: 'Dashboard' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/product', name: 'Dashboard', component: Products },
+  { path: '/viewProducts', name: 'Dashboard', component: viewProducts },
 //   { path: '/theme', exact: true, name: 'Theme', component: Colors },
 //   { path: '/theme/colors', name: 'Colors', component: Colors },
 //   { path: '/theme/typography', name: 'Typography', component: Typography },

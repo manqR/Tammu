@@ -78,11 +78,10 @@ class Login extends Component {
     return (
       <div className="app flex-row align-items-center">
         <Container>
-        <Alert color="danger">
-          This is a danger alert — check it out!
-        </Alert>
+       
           <Row className="justify-content-center">
             <Col md="8">
+            { this.state.errorMsg && <Alert color="danger">Username or Password Incorrect!</Alert>}            
               <CardGroup>
                 <Card className="p-4">
                   <CardBody>

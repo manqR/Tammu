@@ -19,17 +19,28 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
+import {removeUserSession} from '../../Auth/common';
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
+
 class DefaultLayout extends Component {
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
-
+  
   signOut(e) {
-    e.preventDefault()
+    e.preventDefault()    
+    const BASE_URL = 'http://localhost:3000/api/auth/logout'; 
+        fetch(BASE_URL, { 
+            method: 'get', 
+            headers: new Headers({              
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Accept": "application/json"    
+            })       
+        })
+    removeUserSession()
     this.props.history.push('/login')
   }
 

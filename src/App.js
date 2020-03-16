@@ -12,7 +12,8 @@ const DefaultLayout = React.lazy(() => import('./containers/DefaultLayout'));
 
 // Pages 
 const Login = React.lazy(() => import('./views/Pages/Login/Login'));
-const Home = React.lazy(() => import('./views/Dashboard/Dashboard'));
+const Product = React.lazy(() => import('./views/Pages/Product/Products'));
+const viewProducts = React.lazy(() => import('./views/Pages/Product/viewProducts'));
 const Register = React.lazy(() => import('./views/Pages/Register/Register'));
 const Page404 = React.lazy(() => import('./views/Pages/Page404/Page404'));
 const Page500 = React.lazy(() => import('./views/Pages/Page500/Page500'));
@@ -27,8 +28,12 @@ function App() {
             <div className="content">
             <Switch>              
                 <PublicRoute path="/login" component={Login} />
-                <PrivateRoute path="/dashboard" component={Home} />
+                <PrivateRoute path="/dashboard" component={DefaultLayout} />
+                <PrivateRoute path="" component={DefaultLayout} />
+                <PrivateRoute path="/product" component={Product} />
+                <PrivateRoute path="/viewProducts" component={viewProducts} />
             </Switch>
+
             </div>
           </div>
           </React.Suspense>
@@ -39,22 +44,3 @@ function App() {
  
 export default App;
 
-
-// class App extends Component {
-//   render() {
-//     return (
-//       <HashRouter>
-//           <React.Suspense fallback={loading()}>
-//             <Switch>
-//               <Route exact path="/login" name="Login Page" render={props => <Login {...props}/>} />
-//               <Route exact path="/register" name="Register Page" render={props => <Register {...props}/>} />
-//               <Route exact path="/404" name="Page 404" render={props => <Page404 {...props}/>} />
-//               <Route exact path="/500" name="Page 500" render={props => <Page500 {...props}/>} />
-//               <Route path="/" name="Home" render={props => <DefaultLayout {...props}/>} />
-//             </Switch>
-//           </React.Suspense>
-//       </HashRouter>
-//     );
-//   }
-// }
-// export default App;
