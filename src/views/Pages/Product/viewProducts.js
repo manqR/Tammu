@@ -11,7 +11,7 @@ class viewProducts extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const BASE_URL = 'http://localhost:3000/api/auth/listProduct'; 
+        const BASE_URL = 'http://18.139.0.190:10000/api/auth/listProduct'; 
         fetch(BASE_URL, { 
             method: 'get', 
             headers: new Headers({

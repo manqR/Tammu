@@ -85,7 +85,7 @@ class Products extends Component {
   submitHandler(e) { 
     // let token = this.getToken()            
     e.preventDefault();      
-    axios('http://localhost:3000/api/auth/product', {
+    axios('http://18.139.0.190:10000/api/auth/product', {
         method: "POST",
         proxyHeaders: false,
         credentials: true,        

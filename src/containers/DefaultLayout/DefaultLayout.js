@@ -32,7 +32,7 @@ class DefaultLayout extends Component {
   
   signOut(e) {
     e.preventDefault()    
-    const BASE_URL = 'http://localhost:3000/api/auth/logout'; 
+    const BASE_URL = 'http://18.139.0.190:10000/api/auth/logout'; 
         fetch(BASE_URL, { 
             method: 'get', 
             headers: new Headers({              

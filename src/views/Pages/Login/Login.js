@@ -48,7 +48,7 @@ class Login extends Component {
   submitHandler(e) { 
       
       e.preventDefault();      
-      axios('http://localhost:3000/api/auth/login', {
+      axios('http://18.139.0.190:10000/api/auth/login', {
           method: "POST",
           proxyHeaders: false,
           credentials: false,
