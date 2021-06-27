@@ -20,6 +20,7 @@ import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
 import {removeUserSession} from '../../Auth/common';
+import {BASE_URL} from '../../Auth/Actions'
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
@@ -32,8 +33,8 @@ class DefaultLayout extends Component {
   
   signOut(e) {
     e.preventDefault()    
-    const BASE_URL = 'http://18.139.0.190:10000/api/auth/logout'; 
-        fetch(BASE_URL, { 
+    const URL = `${BASE_URL}/api/auth/logout`; 
+        fetch(URL, { 
             method: 'get', 
             headers: new Headers({              
               "Content-Type": "application/x-www-form-urlencoded",

@@ -18,6 +18,7 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 import {getToken} from '../../../Auth/common'
+import {BASE_URL} from '../../../Auth/Actions'
 
 class Products extends Component {
   constructor(props) {
@@ -85,7 +86,7 @@ class Products extends Component {
   submitHandler(e) { 
     // let token = this.getToken()            
     e.preventDefault();      
-    axios('http://18.139.0.190:10000/api/auth/product', {
+    axios(`${BASE_URL}/api/auth/product`, {
         method: "POST",
         proxyHeaders: false,
         credentials: true,        

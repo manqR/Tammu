@@ -2,11 +2,21 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Alert, Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import axios from 'axios';
+import {BASE_URL} from '../../../Auth/Actions'
 
 
 const SimpleCrypto = require("simple-crypto-js").default;
+var aesjs = require('aes-js');
 const _secretKey = "superS3cr3t";
 const simpleCrypto = new SimpleCrypto(_secretKey);
+var CryptoJS = require("crypto-js");
+ 
+// Encrypt
+// var ciphertext = CryptoJS.AES.encrypt('pilot2', '1nd0m0b1lIP3v200').toString();
+var ciphertext = CryptoJS.SHA512("admin")
+
+console.log(ciphertext)
+
  
 
 class Login extends Component {
@@ -48,7 +58,7 @@ class Login extends Component {
   submitHandler(e) { 
       
       e.preventDefault();      
-      axios('http://18.139.0.190:10000/api/auth/login', {
+      axios(`${BASE_URL}/login`, {
           method: "POST",
           proxyHeaders: false,
           credentials: false,
@@ -57,8 +67,8 @@ class Login extends Component {
                     "Accept": "application/json"
           },
           data: this.serialize({
-              userName: simpleCrypto.encrypt(this.state.userName),
-              password: simpleCrypto.encrypt(this.state.password),            
+              deviceId: this.state.userName,
+              password: this.state.password
           })
       }).then(response => {
           if(response.data.auth){               

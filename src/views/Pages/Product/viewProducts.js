@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
 import {getToken} from '../../../Auth/common'
+import {BASE_URL} from '../../../Auth/Actions'
 
 class viewProducts extends Component {
     
@@ -11,8 +12,8 @@ class viewProducts extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const BASE_URL = 'http://18.139.0.190:10000/api/auth/listProduct'; 
-        fetch(BASE_URL, { 
+        const URL = `${BASE_URL}/listProduct`; 
+        fetch(URL, { 
             method: 'get', 
             headers: new Headers({
               "x-access-token":getToken(),
@@ -35,7 +36,7 @@ class viewProducts extends Component {
     let listproducts = this.state.data.map((data,i) => {
     
         return <tr key = {i}>
-                    <td>{data.productName}</td>
+                    <td>{data.ITEM_NAME}</td>
                     <td>{data.price}</td>
                     <td>{data.fee}</td>
                     <td>{data.qty}</td>
