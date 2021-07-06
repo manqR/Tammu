@@ -15,8 +15,8 @@ export default {
         class: ''             // optional class names space delimited list for title item ex: "text-center"
       },
       {
-        name: 'Add User',
-        url: '/theme/colors',
+        name: 'Add Employee',
+        url: '/employee',
         icon: 'fa fa-user-o',
       },
       {
@@ -62,15 +62,26 @@ export default {
         },
       },
       {
-        name: 'Add Transaction',
-        url: '/theme/colors',
+        name: 'Sales',
+        url: '/transactionList',
         icon: 'fa fa-opencart',
       },
       {
-        name: 'Reports',
-        url: '/theme/typography',
+        name: 'Operational Cost',
+        url: '/costsList',
+        icon: 'fa fa-list',
+      }, 
+      {
+        name: 'Absent',
+        url: '/absentList',
         icon: 'fa fa-file-pdf-o',
-      },           
+      },    
+      {
+        name: 'Shift',
+        url: '/shiftList',
+        icon: 'fa fa-file-pdf-o',
+      },   
+             
     ],
   };
   

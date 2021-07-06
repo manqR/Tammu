@@ -58,7 +58,7 @@ class Login extends Component {
   submitHandler(e) { 
       
       e.preventDefault();      
-      axios(`${BASE_URL}/login`, {
+      axios(`${BASE_URL}/login2`, {
           method: "POST",
           proxyHeaders: false,
           credentials: false,
@@ -67,7 +67,7 @@ class Login extends Component {
                     "Accept": "application/json"
           },
           data: this.serialize({
-              deviceId: this.state.userName,
+              employeeCode: this.state.userName,
               password: this.state.password
           })
       }).then(response => {

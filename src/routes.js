@@ -24,7 +24,13 @@ const Breadcrumbs = React.lazy(() => import('./views/Base/Breadcrumbs/Breadcrumb
 // const Charts = React.lazy(() => import('./views/Charts'));
 const Dashboard = React.lazy(() => import('./views/Dashboard/Dashboard'));
 const Products = React.lazy(() => import('./views/Pages/Product/Products'));
+const Employee = React.lazy(() => import('./views/Pages/Employee/employee'));
 const viewProducts = React.lazy(() => import('./views/Pages/Product/viewProducts'));
+
+const costsList = React.lazy(() => import('./views/Pages/Costs/costsList'));
+const absentList = React.lazy(() => import('./views/Pages/Absent/absentList'));
+const shiftList = React.lazy(() => import('./views/Pages/Shift/shiftList'));
+const transactionList = React.lazy(() => import('./views/Pages/Transaction/transactionList'));
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
 // const Flags = React.lazy(() => import('./views/Icons/Flags'));
 // const FontAwesome = React.lazy(() => import('./views/Icons/FontAwesome'));
@@ -42,8 +48,13 @@ const viewProducts = React.lazy(() => import('./views/Pages/Product/viewProducts
 const routes = [
   { path: '/', exact: true, name: 'Dashboard' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/product', name: 'Dashboard', component: Products },
-  { path: '/viewProducts', name: 'Dashboard', component: viewProducts },
+  { path: '/employee', name: 'Employee', component: Employee },
+  { path: '/product', name: 'Product', component: Products },
+  { path: '/viewProducts', name: 'List Product', component: viewProducts },
+  { path: '/costsList', name: 'Operational Cost', component: costsList },
+  { path: '/absentList', name: 'Absent', component: absentList },
+  { path: '/shiftList', name: 'Shift', component: shiftList },
+  { path: '/transactionList', name: 'Sales', component: transactionList },
 //   { path: '/theme', exact: true, name: 'Theme', component: Colors },
 //   { path: '/theme/colors', name: 'Colors', component: Colors },
 //   { path: '/theme/typography', name: 'Typography', component: Typography },
