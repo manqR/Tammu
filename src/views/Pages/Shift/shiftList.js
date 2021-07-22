@@ -13,7 +13,7 @@ class shiftList extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const URL = `${BASE_URL}shiftList`; 
+        const URL = `${BASE_URL}/auth/shiftList`; 
         fetch(URL, { 
             method: 'get', 
             headers: new Headers({

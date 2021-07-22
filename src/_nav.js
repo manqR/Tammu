@@ -15,6 +15,11 @@ export default {
         class: ''             // optional class names space delimited list for title item ex: "text-center"
       },
       {
+        name: 'Promo',
+        url: '/promo/create',
+        icon: 'fa fa-user-o',
+      },
+      {
         name: 'Add Employee',
         url: '/employee',
         icon: 'fa fa-user-o',

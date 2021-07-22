@@ -70,7 +70,7 @@ class Employee extends Component {
   submitHandler(e) { 
     // let token = this.getToken()            
     e.preventDefault();      
-    axios(`${BASE_URL}employee`, {
+    axios(`${BASE_URL}/auth/employee`, {
         method: "POST",
         proxyHeaders: false,
         credentials: true,        

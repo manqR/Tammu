@@ -58,7 +58,7 @@ class Login extends Component {
   submitHandler(e) { 
       
       e.preventDefault();      
-      axios(`${BASE_URL}/login2`, {
+      axios(`${BASE_URL}/auth/login2`, {
           method: "POST",
           proxyHeaders: false,
           credentials: false,

@@ -13,7 +13,7 @@ class viewProducts extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const URL = `${BASE_URL}absentList`; 
+        const URL = `${BASE_URL}/auth/absentList`; 
         fetch(URL, { 
             method: 'get', 
             headers: new Headers({
