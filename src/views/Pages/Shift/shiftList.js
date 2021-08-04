@@ -13,9 +13,9 @@ class shiftList extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const URL = `${BASE_URL}/auth/shiftList`; 
+        const URL = `${BASE_URL}/shift/list`; 
         fetch(URL, { 
-            method: 'get', 
+            method: 'post', 
             headers: new Headers({
               "x-access-token":getToken(),
               "Content-Type": "application/x-www-form-urlencoded",
@@ -35,15 +35,13 @@ class shiftList extends Component {
   render() {
     Moment.locale('id');
     let listShifts = this.state.data.map((data,i) => {        
-        return <tr key = {i}>
-                    <td>{data.SHIFT_NO}</td>
+        return <tr key = {i}>           
                     <td>{data.BRANCH_NAME}</td>
+                    <td>{data.SHIFT_NO}</td>
                     <td>{data.EMPLOYEE_NAME}</td>
-                    <td>{Moment(data.SHIFT_IN_DATE).format('DD/MM/YYYY HH:mm:ss')}</td>
-                    <td>{Moment(data.SHIFT_OUT_DATE).format('DD/MM/YYYY HH:mm:ss')}</td>
-                    <td>{data.AMOUNT_SALES}</td>
-                    <td>{data.AMOUNT_CASH}</td>
-                    <td>{data.AMOUNT_OPEX}</td>
+                    <td>{data.SHIFT_IN_DATE.replace("T"," ").replace(".000Z","")}</td>
+                    <td>{data.SHIFT_OUT_DATE.replace("T"," ").replace(".000Z","")}</td>
+                    <td>{data.HOURS}</td>
                 </tr>  
     })
 
@@ -59,14 +57,12 @@ class shiftList extends Component {
                 <Table responsive>
                   <thead>
                   <tr>
-                    <th>Shift No</th>
                     <th>Branch Name</th>
+                    <th>Shift No</th>
                     <th>Employee Name</th>
                     <th>Shift in</th>
-                    <th>Shift Out</th>
-                    <th>Amount Sales</th>
-                    <th>Amount Cash</th>
-                    <th>Amount Opx</th>
+                    <th>Shift Out</th>                    
+                    <th>Hours</th>
                   </tr>
                   </thead>
                   <tbody>                    

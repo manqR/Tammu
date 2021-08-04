@@ -3,6 +3,7 @@ import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, Pag
 import {getToken} from '../../../Auth/common'
 import {BASE_URL} from '../../../Auth/Actions'
 import Moment from 'moment';
+import 'moment/locale/id' 
 
 class viewProducts extends Component {
     
@@ -13,9 +14,9 @@ class viewProducts extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const URL = `${BASE_URL}/auth/transactionList`; 
+        const URL = `${BASE_URL}/sales/list`; 
         fetch(URL, { 
-            method: 'get', 
+            method: 'POST', 
             headers: new Headers({
               "x-access-token":getToken(),
               "Content-Type": "application/x-www-form-urlencoded",
@@ -34,15 +35,17 @@ class viewProducts extends Component {
     }
 
   render() {
-    Moment.locale('id');
     let listproducts = this.state.data.map((data,i) => {
     
         return <tr key = {i}>
-                    <td>{data.BRANCH_NAME}</td>
-                    <td>{data.SALES_DOC_NO}</td>
+                  <td>{data.SALES_DOC_NO}</td>
+                    <td>{data.BRANCH_NAME}</td>  
+                    <td>{data.SHIFT_NO}</td>                  
+                    <td>{data.CUSTOMER_NAME}</td>                  
                     <td>{data.PAYMENT_TYPE}</td>
                     <td>{data.AMOUNT}</td>
-                    <td>{Moment(data.CREATION_DATETIME).format('DD/MM/YYYY HH:mm:ss')}</td>
+                    <td>{data.SALES_DATE.replace("T"," ").replace(".000Z","")}</td>
+                    {/* <td>{Moment(data.).format('DD/MM/YYYY HH:mm:ss')}</td> */}
                 </tr>  
     })
 
@@ -58,11 +61,13 @@ class viewProducts extends Component {
                 <Table responsive>
                   <thead>
                   <tr>
-                    <th>Branch Name</th>
                     <th>Sales No</th>
+                    <th>Branch Name</th>
+                    <th>Shift No</th>
+                    <th>Customer Name</th>    
                     <th>Payment Type</th>
                     <th>Amount</th>
-                    <th>Payment Date</th>
+                    <th>Sales Date</th>
                   </tr>
                   </thead>
                   <tbody>                    

@@ -13,9 +13,9 @@ class viewProducts extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const URL = `${BASE_URL}/auth/absentList`; 
+        const URL = `${BASE_URL}/absent/list`; 
         fetch(URL, { 
-            method: 'get', 
+            method: 'post', 
             headers: new Headers({
               "x-access-token":getToken(),
               "Content-Type": "application/x-www-form-urlencoded",
@@ -37,10 +37,12 @@ class viewProducts extends Component {
     Moment.locale('id');
     let listproducts = this.state.data.map((data,i) => {        
         return <tr key = {i}>
-                    <td>{data.BRANCH_NAME}</td>
+        
                     <td>{data.EMPLOYEE_NAME}</td>
-                    <td>{Moment(data.ABSENT_IN_TIMESTAMP).format('DD/MM/YYYY HH:mm:ss')}</td>
-                    <td>{Moment(data.ABSENT_OUT_TIMESTAMP).format('DD/MM/YYYY HH:mm:ss')}</td>
+                    <td>{data.BRANCH_NAME}</td>
+                    <td>{data.ABSENT_IN_TIMESTAMP.replace("T"," ").replace(".000Z","")}</td>
+                    <td>{data.ABSENT_OUT_TIMESTAMP.replace("T"," ").replace(".000Z","")}</td>                  
+                    <td>{data.HOURS}</td>
                 </tr>  
     })
 
@@ -56,10 +58,11 @@ class viewProducts extends Component {
                 <Table responsive>
                   <thead>
                   <tr>
-                    <th>Branch Name</th>
-                    <th>Employee Name</th>
+                  < th>Employee Name</th>
+                    <th>Branch Name</th>                    
                     <th>Absent In</th>
                     <th>Absent Out</th>
+                    <th>Work Hours</th>
                   </tr>
                   </thead>
                   <tbody>                    

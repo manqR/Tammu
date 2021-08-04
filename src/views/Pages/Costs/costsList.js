@@ -13,9 +13,9 @@ class viewProducts extends Component {
 
     componentDidMount() {           
         this.mounted = true; 
-        const URL = `${BASE_URL}/auth/costsList`; 
+        const URL = `${BASE_URL}/opx/list`; 
         fetch(URL, { 
-            method: 'get', 
+            method: 'post', 
             headers: new Headers({
               "x-access-token":getToken(),
               "Content-Type": "application/x-www-form-urlencoded",
@@ -39,12 +39,12 @@ class viewProducts extends Component {
     
         return <tr key = {i}>
                     <td>{data.BRANCH_NAME}</td>
-                    <td>{data.OPEX_DOC_NO}</td>
                     <td>{data.EMPLOYEE_NAME}</td>
+                    <td>{data.OPEX_DOC_NO}</td>
+                    <td>{data.OPEX_DATE.replace("T"," ").replace(".000Z","")}</td>
                     <td>{data.OPEX_CATEGORY}</td>
-                    <td>{data.REMARKS}</td>
                     <td>{data.OPEX_AMOUNT}</td>        
-                    <td>{Moment(data.OPEX_DATE).format('DD/MM/YYYY HH:mm:ss')}</td>               
+                    <td>{data.SOURCE_AMOUNT}</td>                    
                 </tr>  
     })
 
@@ -59,14 +59,14 @@ class viewProducts extends Component {
               <CardBody>
                 <Table responsive>
                   <thead>
-                  <tr>
+                  <tr>                
                     <th>Branch Name</th>
+                    <th>Employee Name</th>
                     <th>Opex Doc No</th>
-                    <th>Operator Name</th>
-                    <th>Category</th>
-                    <th>Remarks</th>
-                    <th>Costs Amount</th>
                     <th>Opex Date</th>
+                    <th>Opex Category</th>
+                    <th>Opex Amount</th>
+                    <th>Source Amount</th>
                   </tr>
                   </thead>
                   <tbody>                    
