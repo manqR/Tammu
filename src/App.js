@@ -20,6 +20,7 @@ const shiftList = React.lazy(() => import('./views/Pages/Shift/shiftList'));
 const costsList = React.lazy(() => import('./views/Pages/Costs/costsList'));
 const transactionList = React.lazy(() => import('./views/Pages/Transaction/transactionList'));
 const Promo = React.lazy(() => import('./views/Pages/Promo/index'));
+const ReportList = React.lazy(() => import('./views/Pages/Report/index'));
 const Register = React.lazy(() => import('./views/Pages/Register/Register'));
 const Page404 = React.lazy(() => import('./views/Pages/Page404/Page404'));
 const Page500 = React.lazy(() => import('./views/Pages/Page500/Page500'));
@@ -44,6 +45,7 @@ function App() {
                 <PrivateRoute path="/costsList" component={costsList} />
                 <PrivateRoute path="/transactionList" component={transactionList} />                
                 <PrivateRoute path="/promo/create" component={Promo} />                
+                <PrivateRoute path="/report/list" component={Promo} />                
             </Switch>
 
             </div>

@@ -40,8 +40,8 @@ class viewProducts extends Component {
         
                     <td>{data.EMPLOYEE_NAME}</td>
                     <td>{data.BRANCH_NAME}</td>
-                    <td>{data.ABSENT_IN_TIMESTAMP.replace("T"," ").replace(".000Z","")}</td>
-                    <td>{data.ABSENT_OUT_TIMESTAMP.replace("T"," ").replace(".000Z","")}</td>                  
+                    <td>{data.ABSENT_IN_TIMESTAMP}</td>
+                    <td>{data.ABSENT_OUT_TIMESTAMP}</td>                  
                     <td>{data.HOURS}</td>
                 </tr>  
     })

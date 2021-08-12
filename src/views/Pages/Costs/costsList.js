@@ -41,8 +41,8 @@ class viewProducts extends Component {
                     <td>{data.BRANCH_NAME}</td>
                     <td>{data.EMPLOYEE_NAME}</td>
                     <td>{data.OPEX_DOC_NO}</td>
-                    <td>{data.OPEX_DATE.replace("T"," ").replace(".000Z","")}</td>
-                    <td>{data.OPEX_CATEGORY}</td>
+                    <td>{data.OPEX_DATE}</td>
+                    <td>{data.REMARKS}</td>
                     <td>{data.OPEX_AMOUNT}</td>        
                     <td>{data.SOURCE_AMOUNT}</td>                    
                 </tr>  
@@ -64,7 +64,7 @@ class viewProducts extends Component {
                     <th>Employee Name</th>
                     <th>Opex Doc No</th>
                     <th>Opex Date</th>
-                    <th>Opex Category</th>
+                    <th>Keterangan</th>
                     <th>Opex Amount</th>
                     <th>Source Amount</th>
                   </tr>

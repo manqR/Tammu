@@ -19,7 +19,8 @@ import {
 } from 'reactstrap';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
-
+import {BASE_URL} from '../../Auth/Actions'
+import {getToken} from '../../Auth/common'
 
 const brandPrimary = getStyle('--primary')
 const brandSuccess = getStyle('--success')
@@ -231,43 +232,14 @@ var elements = 27;
 var data1 = [];
 var data2 = [];
 var data3 = [];
+var lbl = [];
+var txt = "";
 
 for (var i = 0; i <= elements; i++) {
-  data1.push(random(50, 200));
   data2.push(random(80, 100));
   data3.push(65);
 }
 
-const mainChart = {
-  labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: hexToRgba(brandInfo, 10),
-      borderColor: brandInfo,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: data1,
-    },
-    {
-      label: 'My Second dataset',
-      backgroundColor: 'transparent',
-      borderColor: brandSuccess,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: data2,
-    },
-    {
-      label: 'My Third dataset',
-      backgroundColor: 'transparent',
-      borderColor: brandDanger,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 1,
-      borderDash: [8, 5],
-      data: data3,
-    },
-  ],
-};
 
 const mainChartOpts = {
   tooltips: {
@@ -299,7 +271,7 @@ const mainChartOpts = {
           beginAtZero: true,
           maxTicksLimit: 5,
           stepSize: Math.ceil(250 / 5),
-          max: 250,
+          max: 1000000,
         },
       }],
   },
@@ -323,6 +295,11 @@ class Dashboard extends Component {
     this.state = {
       dropdownOpen: false,
       radioSelected: 2,
+      datadash1: [], 
+      datadash2:[],
+      datadash3:[],
+      lbldate:[],
+      sumsls:[]
     };
   }
 
@@ -338,162 +315,226 @@ class Dashboard extends Component {
     });
   }
 
+
+  
+  componentDidMount() {           
+    this.mounted = true; 
+    const URL = `${BASE_URL}/report/dash1`; 
+    fetch(URL, { 
+        method: 'POST', 
+        headers: new Headers({
+          "x-access-token":getToken(),
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Accept": "application/json"    
+        })       
+    })
+    .then(response => response.json())
+    .then(json => {
+        this.setState({ datadash1: json.results });       
+        // console.log(this.state.data)
+    });   
+
+
+    
+    const URL_REPORT = `${BASE_URL}/report/dash2`; 
+    fetch(URL_REPORT, { 
+        method: 'POST', 
+        headers: new Headers({
+          "x-access-token":getToken(),
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Accept": "application/json"    
+        })       
+    })
+    .then(response => response.json())
+    .then(json => {
+        this.setState({ datadash2: json.results }); 
+        data1 = [];        
+        lbl = [];        
+        for (let x in this.state.datadash2) {          
+          data1.push(this.state.datadash2[x]["SUM_SALES"]);
+          lbl.push(this.state.datadash2[x]["SHIFT_IN_DATE"].slice(0,-5));
+         
+        }
+        console.log(lbl.length)
+        txt = "Period "+lbl[0] + " - "+lbl[lbl.length-1] ;
+        
+    }); 
+
+
+    const URL_REPORT2 = `${BASE_URL}/report/dash3`; 
+    fetch(URL_REPORT2, { 
+        method: 'POST', 
+        headers: new Headers({
+          "x-access-token":getToken(),
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Accept": "application/json"    
+        })       
+    })
+    .then(response => response.json())
+    .then(json => {
+        this.setState({ datadash3: json.results });         
+       
+    }); 
+    
+}
+
+componentWillUnmount() {
+    this.mounted = false;
+}
+
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
+      const mainChart = {
+          // labels: [this.state.lbldate],
+          labels: lbl,
+          datasets: [
+            {
+              label: 'Sales Amount',
+              backgroundColor: hexToRgba(brandInfo, 10),
+              borderColor: brandInfo,
+              pointHoverBackgroundColor: '#fff',
+              borderWidth: 2,
+              data: data1,
+            },
+          
+          ],
+        };
+
+    let dash1 = this.state.datadash1.map((data, i) =>{
+      console.log("sales",data.TOTAL_SALES.replace(/,/g,""))
+      let netSales = parseInt(data.TOTAL_SALES.replace(/,/g,"")) - parseInt(data.VOUCHER_AMOUNT.replace(/,/g,"")) - parseInt(data.OPX_AMOUNT.replace(/,/g,""));
+      
+      netSales = new Number(netSales).toLocaleString("us-Us");  
+      return <Row>
+              <Col xs="12" sm="6" lg="3">
+                <Card className="text-white bg-info">
+                  <CardBody className="pb-0">
+                    
+                    <div className="text-value">{data.TOTAL_SALES}</div>
+                    <div>Total Sales</div>
+                  </CardBody>
+                  <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
+                    <Line data={cardChartData2} options={cardChartOpts2} height={70} />
+                  </div>
+                </Card>
+              </Col>
+
+              <Col xs="12" sm="6" lg="3">
+                <Card className="text-white bg-primary">
+                  <CardBody className="pb-0">
+                    <div className="text-value">{data.VOUCHER_AMOUNT}</div>
+                    <div>Voucher Amount</div>
+                  </CardBody>
+                  <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
+                    <Line data={cardChartData1} options={cardChartOpts1} height={70} />
+                  </div>
+                </Card>
+              </Col>
+
+              <Col xs="12" sm="6" lg="3">
+                <Card className="text-white bg-warning">
+                  <CardBody className="pb-0">
+                    
+                    <div className="text-value">{data.OPX_AMOUNT}</div>
+                    <div>Operational Costs</div>
+                  </CardBody>
+                  <div className="chart-wrapper" style={{ height: '70px' }}>
+                    <Line data={cardChartData3} options={cardChartOpts3} height={70} />
+                  </div>
+                </Card>
+              </Col>
+
+              <Col xs="12" sm="6" lg="3">
+                <Card className="text-white bg-danger">
+                  <CardBody className="pb-0">
+                    <div className="text-value">{netSales}</div>
+                    <div>Net Sales</div>
+                  </CardBody>
+                  <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
+                    <Bar data={cardChartData4} options={cardChartOpts4} height={70} />
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+    })
+
+
+    let dash3 = this.state.datadash3.map((data, i) =>{
+
+     
+      let totalsales = parseInt(data.CASH_AMOUNT) +
+                     parseInt(data.OVO_AMOUNT) + 
+                     parseInt(data.GOPAY_AMOUNT) + 
+                     parseInt(data.DEBIT_AMOUNT) + 
+                     parseInt(data.VOUCHER_AMOUNT) + 
+                    parseInt(data.OWN_AMOUNT);
+
+      console.log(totalsales)
+
+      let percentCash = (data.CASH_AMOUNT / totalsales) * 100;
+      let percentOvo = (data.OVO_AMOUNT / totalsales) * 100;
+      let percentGopay = (data.GOPAY_AMOUNT / totalsales) * 100;
+      let percentDebit = (data.DEBIT_AMOUNT / totalsales) * 100;
+      let percentVoucher = (data.VOUCHER_AMOUNT / totalsales) * 100;
+      let percentOwn = (data.OWN_AMOUNT / totalsales) * 100;
+
+      console.log("percent",percentOwn.toFixed(0))
+                    // totalsales = new Number(totalsales).toLocaleString("us-Us");  
+      return <Row className="text-center">
+              <Col sm={12} md className="mb-sm-2 mb-0">
+                <div className="text-muted">Cash </div>
+                <strong>{new Number(data.CASH_AMOUNT).toLocaleString("us-Us")}  ({percentCash.toFixed(2)}%)</strong>
+                <Progress className="progress-xs mt-2" color="success" value={percentCash.toFixed(0)} />
+              </Col>
+              <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+                <div className="text-muted">Ovo</div>
+                <strong>{new Number(data.OVO_AMOUNT).toLocaleString("us-Us")}  ({percentOvo.toFixed(2)}%)</strong>
+                <Progress className="progress-xs mt-2" color="primary" value={percentOvo.toFixed(0)} />
+              </Col>
+              <Col sm={12} md className="mb-sm-2 mb-0">
+                <div className="text-muted">Gopay</div>
+                <strong>{new Number(data.GOPAY_AMOUNT).toLocaleString("us-Us")}  ({percentGopay.toFixed(2)}%)</strong>
+                <Progress className="progress-xs mt-2" color="primary" value={percentGopay.toFixed(0)}/>
+              </Col>
+              <Col sm={12} md className="mb-sm-2 mb-0">
+                <div className="text-muted">Debit</div>
+                <strong>{new Number(data.DEBIT_AMOUNT).toLocaleString("us-Us")}  ({percentDebit.toFixed(2)}%)</strong>
+                <Progress className="progress-xs mt-2" color="primary" value={percentDebit.toFixed(0)} />
+              </Col>
+              <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+                <div className="text-muted">Voucher</div>
+                <strong>{new Number(data.VOUCHER_AMOUNT).toLocaleString("us-Us")}  ({percentVoucher.toFixed(2)}%)</strong>
+                <Progress className="progress-xs mt-2" color="warning" value={percentVoucher.toFixed(0)} />
+              </Col>
+              <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+                <div className="text-muted">Own</div>
+                <strong>{new Number(data.OWN_AMOUNT).toLocaleString("us-Us")}  ({percentOwn.toFixed(2)}%)</strong>
+                <Progress className="progress-xs mt-2" color="danger" value={percentOwn.toFixed(0)} />
+              </Col>
+            </Row>
+    })
 
     return (
       <div className="animated fadeIn">
-        <Row>
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-info">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <ButtonDropdown id='card1' isOpen={this.state.card1} toggle={() => { this.setState({ card1: !this.state.card1 }); }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem disabled>Disabled action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Line data={cardChartData2} options={cardChartOpts2} height={70} />
-              </div>
-            </Card>
-          </Col>
-
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-primary">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <Dropdown id='card2' isOpen={this.state.card2} toggle={() => { this.setState({ card2: !this.state.card2 }); }}>
-                    <DropdownToggle className="p-0" color="transparent">
-                      <i className="icon-location-pin"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Line data={cardChartData1} options={cardChartOpts1} height={70} />
-              </div>
-            </Card>
-          </Col>
-
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-warning">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <Dropdown id='card3' isOpen={this.state.card3} toggle={() => { this.setState({ card3: !this.state.card3 }); }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper" style={{ height: '70px' }}>
-                <Line data={cardChartData3} options={cardChartOpts3} height={70} />
-              </div>
-            </Card>
-          </Col>
-
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-danger">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <ButtonDropdown id='card4' isOpen={this.state.card4} toggle={() => { this.setState({ card4: !this.state.card4 }); }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Bar data={cardChartData4} options={cardChartOpts4} height={70} />
-              </div>
-            </Card>
-          </Col>
-        </Row>
+        {dash1}
         <Row>
           <Col>
             <Card>
               <CardBody>
                 <Row>
                   <Col sm="5">
-                    <CardTitle className="mb-0">Traffic</CardTitle>
-                    <div className="small text-muted">November 2015</div>
+                    <CardTitle className="mb-0">Sales Traffic</CardTitle>
+                    <div className="small text-muted">{txt}</div>
                   </Col>
-                  <Col sm="7" className="d-none d-sm-inline-block">
-                    <Button color="primary" className="float-right"><i className="icon-cloud-download"></i></Button>
-                    <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
-                      <ButtonGroup className="mr-3" aria-label="First group">
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(1)} active={this.state.radioSelected === 1}>Day</Button>
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(2)} active={this.state.radioSelected === 2}>Month</Button>
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(3)} active={this.state.radioSelected === 3}>Year</Button>
-                      </ButtonGroup>
-                    </ButtonToolbar>
-                  </Col>
+                 
                 </Row>
                 <div className="chart-wrapper" style={{ height: 300 + 'px', marginTop: 40 + 'px' }}>
                   <Line data={mainChart} options={mainChartOpts} height={300} />
                 </div>
               </CardBody>
               <CardFooter>
-                <Row className="text-center">
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Visits</div>
-                    <strong>29.703 Users (40%)</strong>
-                    <Progress className="progress-xs mt-2" color="success" value="40" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Unique</div>
-                    <strong>24.093 Users (20%)</strong>
-                    <Progress className="progress-xs mt-2" color="info" value="20" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Pageviews</div>
-                    <strong>78.706 Views (60%)</strong>
-                    <Progress className="progress-xs mt-2" color="warning" value="60" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">New Users</div>
-                    <strong>22.123 Users (80%)</strong>
-                    <Progress className="progress-xs mt-2" color="danger" value="80" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Bounce Rate</div>
-                    <strong>Average Rate (40.15%)</strong>
-                    <Progress className="progress-xs mt-2" color="primary" value="40" />
-                  </Col>
-                </Row>
+                {dash3}
               </CardFooter>
             </Card>
           </Col>

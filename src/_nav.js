@@ -67,6 +67,11 @@ export default {
         },
       },
       {
+        name: 'Report',
+        url: '/report',
+        icon: 'fa fa-opencart',
+      },
+      {
         name: 'Sales',
         url: '/transactionList',
         icon: 'fa fa-opencart',
