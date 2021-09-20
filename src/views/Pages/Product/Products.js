@@ -15,6 +15,7 @@ import {
   Label,
   Row,
   Alert,
+  Pagination, PaginationItem, PaginationLink,  Table
 } from 'reactstrap';
 import axios from 'axios';
 import {getToken} from '../../../Auth/common'
@@ -24,51 +25,67 @@ class Products extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-        productName: "",
-        productPrice: 0,
-        productFee: 0,
-        productQty: 0,
-        productStatus: 1,
+
+
+    // "RECORD_STATUS": req.body.record_status,
+  
+    // "ITEM_CODE": req.body.item_code,      
+    // "ITEM_NAME": req.body.item_name,               
+    // "ITEM_PHOTO": req.body.item_photo,            
+    // "ITEM_GROUP": req.body.item_group,                        
+              
+    // "PURCHASE_PRICE": req.body.,                        
+         
+        this.state = {
+        record_status: "A",
+        item_code: "",
+        item_name: "",
+        item_photo: "",
+        item_group: "",
+        purchase: 0,
         errorMsg: false,
-        isSave : false
+        isSave : false,
+        data: [] 
     };
+
     this.submitHandler = this.submitHandler.bind(this);
+    this.handleChangeProductCode = this.handleChangeProductCode.bind(this);
     this.handleChangeproductName = this.handleChangeproductName.bind(this);
     this.handleChangeproductPrice = this.handleChangeproductPrice.bind(this);
-    this.handleChangeproductFee = this.handleChangeproductFee.bind(this);
-    this.handleChangeproductQty = this.handleChangeproductQty.bind(this);
-    this.handleChangeproductStatus = this.handleChangeproductStatus.bind(this);
+    this.handleChangeproductPhoto = this.handleChangeproductPhoto.bind(this);
+    this.handleChangeproductGroup = this.handleChangeproductGroup.bind(this);
 
+  }
+
+  
+  handleChangeProductCode = event => {
+    this.setState({
+        item_code: event.target.value
+    });
   }
 
   handleChangeproductName = event => {
     this.setState({
-        productName: event.target.value
+        item_name: event.target.value
     });
   }
 
   handleChangeproductPrice = event => {
     this.setState({
-        productPrice: event.target.value
+        purchase: event.target.value
     });
   }
 
-  handleChangeproductFee = event => {
+  handleChangeproductPhoto = event => {
     this.setState({
-        productFee: event.target.value
+        item_photo: event.target.value
     });
   }
 
-  handleChangeproductQty = event => {
-    this.setState({
-        productQty: event.target.value
-    });
-  }
 
-  handleChangeproductStatus = event => {
+  handleChangeproductGroup = event => {
     this.setState({
-        productStatus: event.target.value
+        item_group: event.target.value
     });
   }
 
@@ -95,12 +112,14 @@ class Products extends Component {
                   "Content-Type": "application/x-www-form-urlencoded",
                   "Accept": "application/json"                  
         },
-        data: this.serialize({            
-            productName: this.state.productName,
-            productPrice: this.state.productPrice,
-            productFee: this.state.productFee,
-            productQty: this.state.productQty,
-            productStatus: this.state.productStatus,                               
+        data: this.serialize({    
+           
+            record_status: this.state.record_status,
+            item_code: this.state.item_code,
+            item_name: this.state.item_name,
+            item_photo: this.state.item_photo,
+            item_group: this.state.item_group,
+            purchase: this.state.purchase                              
         })
     }).then(response => {
         // console.log(response)
@@ -117,15 +136,52 @@ class Products extends Component {
 
 reset(){
     this.setState({
-        productName: "",
-        productPrice: 0,
-        productFee: 0,
-        productQty: 0,
-        productStatus: 1,        
+        item_code: "",
+        item_name: "",
+        item_photo: "",
+        item_group: "",
+        purchase: 0
+
     });
 }
 
+
+componentDidMount() {           
+    this.mounted = true; 
+    const URL = `${BASE_URL}/auth/listProduct`; 
+    fetch(URL, { 
+        method: 'get', 
+        headers: new Headers({
+          "x-access-token":getToken(),
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Accept": "application/json"    
+        })       
+    })
+    .then(response => response.json())
+    .then(json => {
+        this.setState({ data: json.results });       
+        console.log(this.state.data)
+    });          
+    
+}
+componentWillUnmount() {
+    this.mounted = false;
+}
+
   render() {
+
+    let listproducts = this.state.data.map((data,i) => {
+    
+        return <tr key = {i}>
+                    <td>{data.COMPANY_CODE}</td>
+                    <td>{data.BRANCH_CODE}</td>
+                    <td>{data.ITEM_CODE}</td>
+                    <td>{data.ITEM_NAME}</td>
+                    <td>{data.ITEM_GROUP}</td>
+                    <td>{data.PURCHASE_PRICE}</td>
+                </tr>  
+    })
+
     return (
         <div className="animated fadeIn">
             { this.state.errorMsg && <Alert color="danger">Product failed to saving!</Alert>}            
@@ -202,6 +258,43 @@ reset(){
                     </CardFooter>
                     </Card>
                 
+                </Col>
+
+                {/* LIST PRODUCT */}
+                <Col xs="12" lg="12">
+                    <Card>
+                        <CardHeader>
+                            <i className="fa fa-align-justify"></i> Product List
+                        </CardHeader>
+                        <CardBody>
+                            <Table responsive>
+                            <thead>
+                            <tr>                    
+                                <th>COMPANY CODE</th>
+                                <th>BRANCH CODE</th>
+                                <th>ITEM CODE</th>
+                                <th>ITEM NAME</th>
+                                <th>CATEGORY</th>
+                                <th>PURCHASE PRICE</th>
+                            </tr>
+                            </thead>
+                            <tbody>    
+                                {listproducts}               
+                            </tbody>
+                            </Table>
+                            <Pagination>
+                                <PaginationItem>
+                                    <PaginationLink previous tag="button"></PaginationLink>
+                                </PaginationItem>
+                                <PaginationItem active>
+                                    <PaginationLink tag="button">1</PaginationLink>
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationLink next tag="button"></PaginationLink>
+                                </PaginationItem>
+                            </Pagination>
+                        </CardBody>
+                    </Card>
                 </Col>
             </Row>
        

@@ -72,6 +72,11 @@ export default {
         icon: 'fa fa-opencart',
       },
       {
+        name: 'Collection',
+        url: '/collection',
+        icon: 'fa fa-opencart',
+      },
+      {
         name: 'Sales',
         url: '/transactionList',
         icon: 'fa fa-opencart',
